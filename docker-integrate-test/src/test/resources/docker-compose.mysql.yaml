@@ -1,0 +1,18 @@
+version: '2.1'
+
+services:
+  database:
+    image: "mysql/mysql-server:5.7"
+    container_name: mysql-docker-server
+    hostname: mysql
+    command: --default-authentication-plugin=mysql_native_password
+    volumes:
+      - ./mysql/config/my.cnf:/etc/my.cnf
+      - ./mysql/init:/docker-entrypoint-initdb.d/
+    ports:
+      - "3366:3306"
+    healthcheck:
+        test: ["CMD-SHELL", "nc -z localhost 3306 &> /dev/null; echo $$?"]
+        interval: 30s
+        timeout: 10s
+        retries: 5
